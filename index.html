@@ -3,112 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>COMWEL QR2 방문 전 안내</title>
+  <title>방문 전 QR 길잡이</title>
   <style>
-    :root{
-      --blue:#0057B8;--blue2:#0066cc;--navy:#0f294a;--bg:#f5f7fb;--card:#fff;--line:#e5e7eb;--muted:#6b7280;--yellow:#fff7db;--green:#0f9f7a;--red:#b42318;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:var(--bg);color:#111827;line-height:1.7}
-    a{text-decoration:none;color:inherit}.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-    header.top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-    .nav{min-height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 0}.brand{display:flex;align-items:center;gap:10px;font-weight:900;color:var(--navy)}.logo{width:38px;height:38px;border-radius:12px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:900}.brand small{display:block;color:var(--blue);font-size:11px;font-weight:800}.navlinks{display:flex;gap:8px;flex-wrap:wrap}.pill{display:inline-flex;align-items:center;border:1px solid #c9d8ee;border-radius:999px;background:#fff;color:#374151;padding:8px 12px;font-size:13px;font-weight:800}.pill.primary{background:#edf5ff;color:var(--blue);border-color:#d0e2ff}
-    .hero{padding:58px 0 34px;background:linear-gradient(180deg,#fff 0%,#f5f7fb 100%)}.hero-card{background:#fff;border:1px solid var(--line);border-radius:30px;padding:38px;position:relative;overflow:hidden}.hero-card:before{content:"";position:absolute;right:-80px;top:-80px;width:250px;height:250px;background:radial-gradient(circle,rgba(0,87,184,.12),transparent 70%)}.eyebrow{display:inline-flex;align-items:center;gap:8px;background:#edf5ff;color:var(--blue);border:1px solid #d0e2ff;border-radius:999px;padding:8px 13px;font-size:13px;font-weight:900}.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.08;letter-spacing:-.06em;margin:18px 0 14px;color:var(--navy)}.lead{font-size:20px;color:#374151;font-weight:700;margin:0;max-width:760px}.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:15px;background:var(--blue2);color:#fff;font-weight:900;padding:13px 18px}.btn.secondary{background:#fff;color:var(--blue);border:1px solid #c9d8ee}.notice{margin-top:20px;background:var(--yellow);border:1px solid #fde68a;color:#5f4700;border-radius:18px;padding:15px 16px;font-weight:750}
-    section{padding:18px 0}.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:14px}h2{font-size:28px;letter-spacing:-.04em;margin:0;color:var(--navy)}.hint{color:var(--muted);font-size:14px;font-weight:700}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;min-height:170px}.num{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:11px;background:#edf5ff;color:var(--blue);font-weight:900;margin-bottom:14px}.card h3{margin:0 0 8px;font-size:19px;color:var(--navy);letter-spacing:-.03em}.card p{margin:0;color:#4b5563;font-size:15px;font-weight:650}.card ul{margin:14px 0 0;padding:0;list-style:none}.card li{border-top:1px solid #f1f5f9;padding:7px 0;color:#374151;font-size:14px}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{background:#272729;color:#fff;border-radius:22px;padding:20px}.step b{display:block;font-size:17px}.step p{margin:6px 0 0;color:#d1d5db;font-size:13px}.links{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.linkbox{display:block;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.linkbox strong{display:block;color:var(--blue);margin-bottom:4px}.linkbox span{font-size:13px;color:var(--muted);font-weight:700}.disclaimer{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px}.disclaimer p{margin:7px 0;color:#374151;font-weight:750}.disclaimer p strong{color:var(--red)}footer{padding:38px 0;color:#6b7280;font-size:13px;text-align:center}
-    @media(max-width:820px){.hero-card{padding:28px 20px}.grid,.flow,.links{grid-template-columns:1fr}.section-title{display:block}.nav{align-items:flex-start}.lead{font-size:17px}}
+    :root{--blue:#0f62fe;--navy:#0f294a;--teal:#0e7490;--bg:#f6f9fc;--card:#fff;--line:#dde7f0;--muted:#6b7a90;--red:#b42318;--green:#15803d;--yellow:#fddc69}
+    *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:var(--bg);color:var(--navy);line-height:1.6}a{text-decoration:none;color:inherit}button{font:inherit} .wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+    nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.navin{height:64px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;gap:10px;align-items:center}.logo{width:38px;height:38px;border-radius:13px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:900}.brand b{display:block;letter-spacing:-.04em}.brand span{display:block;color:var(--blue);font-size:11px;font-weight:800}.pill{display:inline-flex;align-items:center;border:1px solid #d0e2ff;background:#edf5ff;color:var(--blue);border-radius:999px;padding:8px 12px;font-size:12px;font-weight:900}
+    .hero{padding:34px 0}.hero-card{border-radius:32px;background:linear-gradient(135deg,#123c69,#0f5e9c 55%,#0e7490);color:#fff;text-align:center;padding:44px 24px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.18)}.hero-card:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(255,255,255,.22),transparent 60%);opacity:.7}.hero-card>*{position:relative}.hero h1{font-size:clamp(34px,6vw,58px);line-height:1.05;letter-spacing:-.07em;margin:14px 0}.sub{display:inline-flex;gap:8px;align-items:flex-start;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:12px 15px;font-weight:800;max-width:700px}.cta{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:16px;padding:13px 17px;background:var(--blue);color:#fff;font-weight:900;cursor:pointer}.btn.white{background:rgba(255,255,255,.94);color:var(--navy);border:1px solid #d0e2ff}.btn.ghost{background:#fff;color:var(--blue);border:1px solid #d0e2ff}.guide-link{display:block;background:rgba(255,255,255,.94);color:var(--navy);border:1px solid #d0e2ff;border-radius:20px;padding:16px;text-align:left;max-width:680px;margin:22px auto 0}.guide-link small{color:var(--blue);font-weight:900;text-transform:uppercase}.guide-link h3{margin:4px 0;font-size:17px}.guide-link p{margin:0;color:#4b5563;font-weight:650;font-size:13px}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:26px;padding:24px;margin:18px 0}.board{position:relative}.board-title{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding-bottom:8px;margin:0 0 12px}.num{width:26px;height:26px;border-radius:8px;background:#edf5ff;color:var(--blue);border:1px solid #d0e2ff;display:grid;place-items:center;font-weight:900;font-size:13px}.board-title h2{font-size:20px;margin:0;letter-spacing:-.04em}.board-title em{margin-left:auto;color:var(--muted);font-size:11px;text-transform:uppercase;font-style:italic}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.list{display:grid;gap:9px}.item{width:100%;display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid transparent;border-radius:15px;background:#fff;padding:11px;cursor:pointer}.item:hover{border-color:#d0e2ff;background:#f6faff}.item .idx{width:25px;height:25px;border-radius:50%;border:1px solid #d0e2ff;background:#f8fbff;color:var(--blue);display:grid;place-items:center;font-weight:900;font-size:12px;flex:none}.item b{display:block;color:var(--navy);font-size:14px}.item p{margin:2px 0 0;color:var(--muted);font-size:12px;font-weight:650}.item .target{margin-left:auto;font-size:11px;font-weight:900;color:var(--green);white-space:nowrap}.progress-badge{font-size:10px;background:#edf5ff;color:var(--blue);border:1px solid #d0e2ff;border-radius:8px;padding:2px 6px;white-space:nowrap}.process{background:#f8fbff;border:1px solid var(--line);border-radius:20px;padding:16px;display:grid;gap:14px}.step{display:flex;gap:12px}.step span{width:26px;height:26px;border-radius:50%;background:#fff;border:1px solid #d0e2ff;color:var(--blue);display:grid;place-items:center;font-weight:900;flex:none}.step b{display:block;font-size:13px}.step p{margin:1px 0 0;color:var(--muted);font-size:12px;font-weight:650}.notes ul{margin:0;padding:0;list-style:none;display:grid;gap:9px}.notes li{font-size:13px;font-weight:700;color:#374151}.notes li:before{content:"•";color:var(--blue);font-weight:900;margin-right:8px}
+    .glossary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.gloss{border:1px solid var(--line);border-radius:16px;background:#fcfeff;overflow:hidden}.gloss button{width:100%;border:0;background:transparent;text-align:left;padding:13px;display:flex;gap:8px;justify-content:space-between;cursor:pointer}.gloss b{font-size:13px}.gloss i{font-size:11px;color:var(--blue);font-weight:800}.gloss .def{display:none;border-top:1px dashed var(--line);padding:12px 14px;font-size:12px;color:#374151;font-weight:650}.gloss.open{background:#f8fbff;border-color:#d0e2ff}.gloss.open .def{display:block}
+    .warn{border-color:#f4c7c7;background:#fff7f7;padding:0;overflow:hidden}.warn h3{margin:0;background:#c45e5e;color:#fff;padding:12px 16px;font-size:15px}.warn div{padding:16px;color:#374151;font-size:13px;font-weight:650}.warn strong{color:var(--red)}.links{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.linkbox{display:block;border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px;text-align:center}.linkbox:hover{border-color:var(--blue);background:#f8fbff}.linkbox b{display:block;font-size:13px}.linkbox span{display:block;color:var(--muted);font-size:11px;font-weight:750}.phone{grid-column:span 2;background:#edf5ff;border-color:#d0e2ff;color:var(--blue)}
+    .detail{display:none}.topbar{position:sticky;top:64px;z-index:15;background:#fff;border-bottom:1px solid var(--line);padding:12px 0}.detail-card h2{font-size:28px;letter-spacing:-.05em;margin:8px 0}.tag{display:inline-flex;border:1px solid var(--line);background:#f8fbff;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:900;margin:3px}.section h3{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.02em;margin:0 0 8px}.box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}.checks{display:grid;gap:9px}.check{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;border:1px solid var(--line);background:#f8fbff;border-radius:14px;padding:12px;text-align:left;cursor:pointer;font-weight:750;color:#374151}.check.done{background:#edf5ff;border-color:#d0e2ff;color:var(--navy)}.dot{width:23px;height:23px;border-radius:50%;border:1px solid #b8d7f3;background:#fff;display:grid;place-items:center;flex:none}.check.done .dot{background:var(--blue);border-color:var(--blue);color:#fff}.bar{height:7px;background:#edf5ff;border-radius:999px;overflow:hidden;margin-top:12px}.bar div{height:100%;background:var(--blue);transition:.2s}.timeline{position:relative;display:grid;gap:14px}.timeline:before{content:"";position:absolute;left:12px;top:12px;bottom:12px;width:2px;background:var(--line)}.tl{display:flex;gap:12px;position:relative}.tl span{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid var(--line);font-size:11px;font-weight:900;z-index:1}.tl:first-child span,.tl:nth-child(2) span{background:var(--blue);color:#fff;border-color:var(--blue)}.tl b{font-size:13px}.toast{display:none;position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:100;background:var(--navy);color:#fff;border-radius:16px;padding:13px 18px;box-shadow:0 12px 32px rgba(0,0,0,.2);font-size:13px;font-weight:800;max-width:90vw}.toast.show{display:block}footer{background:var(--navy);color:#fff;margin-top:30px;padding:44px 18px;text-align:center}.footbox{max-width:760px;margin:0 auto}.footbox p{font-size:12px;color:rgba(255,255,255,.78)}.footbox .copy{border-top:1px solid rgba(255,255,255,.12);padding-top:14px;color:rgba(255,255,255,.48)}
+    @media(max-width:820px){.grid,.glossary,.links{grid-template-columns:1fr}.phone{grid-column:span 1}.navin{height:auto;padding:12px 0;align-items:flex-start;flex-direction:column}.topbar{top:91px}.hero-card{padding:34px 18px}.panel{padding:18px}.board-title em{display:none}}
   </style>
 </head>
 <body>
-  <header class="top">
-    <div class="wrap nav">
-      <div class="brand">
-        <div class="logo">QR</div>
-        <div>COMWEL QR2<small>방문 전 안내 · 만족도 조사 PoC</small></div>
-      </div>
-      <div class="navlinks">
-        <a class="pill primary" href="feedback.html?qr=index">방문 후 만족도 조사</a>
-        <a class="pill" href="admin.html">관리자 통계</a>
-      </div>
-    </div>
-  </header>
+  <nav><div class="wrap navin"><div class="brand"><div class="logo">QR</div><div><b>방문 전 QR 길잡이</b><span>방문 전 신뢰 가이드 서비스</span></div></div><div class="cta"><a class="pill" href="feedback.html?qr=index">방문 후 만족도</a><a class="pill" href="admin.html">관리자 통계</a></div></div></nav>
 
-  <main>
-    <section class="hero">
-      <div class="wrap">
-        <div class="hero-card">
-          <span class="eyebrow">방문 전 안내 QR</span>
-          <h1>방문 전 필요한 정보를<br>QR로 확인하세요</h1>
-          <p class="lead">업무별 준비사항과 온라인 이용 경로를 미리 확인할 수 있습니다.</p>
-          <div class="cta">
-            <a class="btn" href="#contents">확인할 수 있는 주요 내용</a>
-            <a class="btn secondary" href="feedback.html?qr=entrance">방문 후 의견 남기기</a>
-          </div>
-          <div class="notice">※ 본 화면은 방문 준비를 돕기 위한 참고용 안내입니다. 개인정보는 입력하지 마세요. 세부 판단과 접수 가능 여부는 담당자 확인이 필요합니다.</div>
-        </div>
-      </div>
-    </section>
+  <div id="listView">
+    <header class="wrap hero"><div class="hero-card"><span class="pill">고객용 방문 전 안내 서비스</span><h1>방문 전 QR 길잡이</h1><div class="sub">✨ 방문 전에 준비서류 · 신청방법 · 확인사항을 미리 확인할 수 있는 안내 서비스</div><div class="cta"><a class="btn white" href="#guideBoard">민원 안내판 보기</a><a class="btn" href="feedback.html?qr=entrance">방문 후 의견 남기기</a></div><a class="guide-link" href="https://comwel-sanjae-rehab-guide.vercel.app" target="_blank" rel="noopener"><small>산재보상·재활 확장 안내</small><h3>산재보상·재활 안내 바로가기 →</h3><p>산재 발생 후 요양 절차, 보험급여, 재활지원, 직업복귀 정보를 한눈에 확인합니다.</p></a></div></header>
 
-    <section id="contents">
-      <div class="wrap">
-        <div class="section-title">
-          <h2>확인할 수 있는 주요 내용</h2>
-          <div class="hint">방문 전 준비사항 · 온라인 경로 · 담당자 확인 필요</div>
-        </div>
-        <div class="grid">
-          <article class="card"><span class="num">1</span><h3>산재보상 상담 준비사항</h3><p>업무상 재해 상담 전 재해경위, 진단자료, 치료내역 등을 미리 확인합니다.</p><ul><li>재해 발생 일시·장소</li><li>진단서·소견서 등 치료자료</li><li>사업장 확인자료</li></ul></article>
-          <article class="card"><span class="num">2</span><h3>고용·산재보험 가입 관련 안내</h3><p>사업장 성립신고, 근로자 취득·상실, 피보험자격 확인청구 관련 준비사항을 안내합니다.</p><ul><li>사업장 정보</li><li>근로기간·임금자료</li><li>근로계약서·출근기록</li></ul></article>
-          <article class="card"><span class="num">3</span><h3>보험료 문의 준비자료</h3><p>보험료 부과, 납부, 정산, 환급 문의에 필요한 기본 정보를 정리합니다.</p><ul><li>사업장 관리번호</li><li>문의 대상 기간</li><li>부과·납부 관련 통지자료</li></ul></article>
-          <article class="card"><span class="num">4</span><h3>증명서 발급 안내</h3><p>가입증명원, 납부확인서 등 필요한 증명서 종류와 온라인 발급 가능 여부를 확인합니다.</p><ul><li>필요 증명서명</li><li>발급 대상 기간</li><li>제출기관 요구사항</li></ul></article>
-          <article class="card"><span class="num">5</span><h3>서류 제출 전 확인사항</h3><p>접수번호, 보완 요청 내용, 제출 예정 자료를 미리 정리하면 상담이 빨라집니다.</p><ul><li>접수번호</li><li>보완 요청 내용</li><li>제출자료 누락 여부</li></ul></article>
-          <article class="card"><span class="num">6</span><h3>온라인 이용 경로</h3><p>방문 전 공식 온라인 서비스를 먼저 확인하여 대기시간과 불필요한 방문을 줄입니다.</p><ul><li>근로복지공단</li><li>고용·산재보험 토탈서비스</li><li>정부24·법령정보</li></ul></article>
-        </div>
-      </div>
-    </section>
+    <main class="wrap" id="guideBoard"><section class="panel board"><div class="grid" id="categoryGrid"></div></section>
+      <section class="panel"><div class="board-title"><span class="num">용</span><h2>공단 핵심 행정 용어 정리</h2><em>comwel glossary</em></div><p style="color:var(--muted);font-size:13px;font-weight:700">괄호 안 핵심 용어를 터치하여 세부 의미를 확인해보세요.</p><div class="glossary" id="glossary"></div></section>
+      <section class="panel warn"><h3>⚠ 이용 유의사항 및 법적 면책고지</h3><div><p><strong>비공식 안내 서비스:</strong> 본 플랫폼은 근로복지공단 공식 웹사이트가 아닌 비공식 정보 제공 도우미이며, 정부 및 공공기관을 대변하지 않습니다.</p><p><strong>개인정보 보호 안내:</strong> 휴대폰 번호, 주민등록번호, 계좌 정보 등 개인정보를 수집하거나 서버에 저장하지 않는 자가 확인 시스템입니다.</p></div></section>
+      <section class="panel"><div class="board-title"><span class="num">↗</span><h2>공식 안내 채널</h2><em>official directory</em></div><div class="links"><a class="linkbox" href="https://www.comwel.or.kr/" target="_blank"><b>근로복지공단</b><span>공식포털</span></a><a class="linkbox" href="https://total.comwel.or.kr/" target="_blank"><b>고용산재토탈</b><span>토탈서비스</span></a><a class="linkbox" href="https://www.gov.kr/" target="_blank"><b>정부24</b><span>인터넷증명서</span></a><a class="linkbox" href="https://www.work.go.kr/seekWantedMain.do" target="_blank"><b>워크넷</b><span>구직·취업정보</span></a><a class="linkbox" href="https://www.ips.go.kr/cht/ptl/main.ndo" target="_blank"><b>국민비서 구삐</b><span>알림서비스</span></a><a class="linkbox" href="https://www.moel.go.kr/" target="_blank"><b>고용노동부</b><span>행정주무부처</span></a><a class="linkbox phone" href="tel:1588-0075"><b>대표 전용망</b><span>1588-0075</span></a></div></section></main>
+  </div>
 
-    <section>
-      <div class="wrap">
-        <div class="section-title">
-          <h2>방문 전 이용 흐름</h2>
-          <div class="hint">QR 스캔 → 목적 확인 → 준비자료 확인 → 창구 상담</div>
-        </div>
-        <div class="flow">
-          <div class="step"><b>1. QR 스캔</b><p>입구, 안내데스크, 대기공간의 QR을 스캔합니다.</p></div>
-          <div class="step"><b>2. 업무 선택</b><p>산재보상, 가입지원, 보험료, 증명서 등 방문 목적을 확인합니다.</p></div>
-          <div class="step"><b>3. 준비사항 확인</b><p>필요서류와 온라인 이용 가능 여부를 미리 점검합니다.</p></div>
-          <div class="step"><b>4. 담당자 확인</b><p>세부 판단과 접수 가능 여부는 담당자가 최종 확인합니다.</p></div>
-        </div>
-      </div>
-    </section>
+  <div id="detailView" class="detail"><div class="topbar"><div class="wrap"><button class="btn ghost" onclick="backToList()">← 전체 민원 목록으로 가기</button></div></div><main class="wrap" id="detailRoot"></main></div>
 
-    <section>
-      <div class="wrap">
-        <div class="section-title">
-          <h2>공식 온라인 이용 경로</h2>
-          <div class="hint">외부 사이트 이동 전 공식 주소 여부를 확인하세요.</div>
-        </div>
-        <div class="links">
-          <a class="linkbox" href="https://www.comwel.or.kr/" target="_blank" rel="noopener"><strong>근로복지공단</strong><span>공식 안내 및 기관 정보</span></a>
-          <a class="linkbox" href="https://total.comwel.or.kr/" target="_blank" rel="noopener"><strong>고용·산재보험 토탈서비스</strong><span>전자신고·증명서 발급</span></a>
-          <a class="linkbox" href="https://www.gov.kr/" target="_blank" rel="noopener"><strong>정부24</strong><span>정부 민원 서비스</span></a>
-          <a class="linkbox" href="https://www.law.go.kr/" target="_blank" rel="noopener"><strong>국가법령정보센터</strong><span>법령·행정규칙 확인</span></a>
-        </div>
-      </div>
-    </section>
+  <footer><div class="footbox"><p>✨ 방문 전 사전 체크가 대기시간을 줄이는 첫 단계입니다.</p><p>본 서비스는 근로복지공단 지사를 방문하기 전 필요 서류를 자가 확인하도록 돕는 비공식 길잡이 도구입니다. 정부, 고용노동부, 근로복지공단 등의 공식 국가 기관 및 공공부처를 대변하거나 대리하지 않습니다.</p><p class="copy">© 2026 방문 전 안심 길잡이. All rights reserved.</p></div></footer><div id="toast" class="toast"></div>
 
-    <section>
-      <div class="wrap">
-        <div class="disclaimer">
-          <p><strong>※ 본 화면은 방문 준비를 돕기 위한 참고용 안내입니다.</strong></p>
-          <p>※ 개인정보는 입력하지 마세요.</p>
-          <p>※ 세부 판단과 접수 가능 여부는 담당자 확인이 필요합니다.</p>
-          <p>※ 본 PoC는 공식 민원 접수, 처분 판단, 법적 판단을 대체하지 않습니다.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap">COMWEL QR2 방문 안내·만족도 조사 PoC · 개인정보 수집 금지 · 담당자 최종 확인 필요</div>
-  </footer>
+  <script>
+    const TOTAL_SERVICE_URL='https://total.comwel.or.kr/';
+    const FORM_URL='https://www.comwel.or.kr/comwel/info/data/papr/papr_lst.jsp';
+    const cards=[
+      {id:'insured-status',category:'자주 찾는 민원',target:'근로자',title:'피보험자격 확인청구',tag:'근무했는데 가입 이력이 없거나 다를 때',what:'고용보험 또는 산재보험 피보험자격 취득·상실 신고 여부를 확인하고 정정 필요성을 검토하는 민원입니다.',who:'근로자 본인 또는 이해관계자가 신청할 수 있습니다.',cases:['입사했는데 고용보험 가입 이력이 조회되지 않는 경우','퇴사일 또는 취득일이 실제와 다르게 신고된 경우','일용근로 내역이 누락된 것으로 보이는 경우'],pre:['근무기간을 설명할 수 있다','임금 지급 자료가 있다','사업장명과 근무지를 알고 있다'],docs:['근로계약서 또는 채용 관련 자료','임금명세서·통장 입금내역','출근부·근무표·업무지시 자료'],help:['문자·카카오톡 업무지시 내역','동료 확인 가능 자료'],procedures:['신청서 접수','자료 보완 및 사실관계 확인','사업장 확인','최종 검토 및 결과 안내'],online:'토탈서비스 또는 관할 지사를 통해 신청 가능 여부를 확인하세요.',caution:'근무 사실과 임금 지급 자료가 부족하면 확인이 지연될 수 있습니다.',onlineUrlLabel:'고용·산재보험 토탈서비스'},
+      {id:'certificate',category:'자주 찾는 민원',target:'민원인',title:'증명서 발급',tag:'가입증명원·납부확인서 등',what:'고용·산재보험 관련 증명서 발급 가능 여부를 확인하는 민원입니다.',who:'사업주, 근로자, 위임받은 대리인이 신청할 수 있습니다.',cases:['사업장 가입증명원이 필요한 경우','보험료 납부확인서가 필요한 경우','기관 제출용 증명서가 필요한 경우'],pre:['필요한 증명서 종류를 알고 있다','대상 기간을 알고 있다','온라인 발급 가능 여부를 확인한다'],docs:['신분 확인 자료','위임장 또는 대리 신청 자료','사업장 관리번호 또는 기본 정보'],help:['제출기관에서 요구한 증명서 명칭'],procedures:['증명서 종류 확인','신분 또는 권한 확인','발급 가능 여부 확인','증명서 발급'],online:'정부24 또는 토탈서비스에서 발급 가능 여부를 먼저 확인하세요.',caution:'증명서 명칭과 제출기관 요구사항을 정확히 확인해야 합니다.',onlineUrlLabel:'정부24/토탈서비스'},
+      {id:'sanjae-medical',category:'재활보상',target:'근로자',title:'요양급여 신청',tag:'업무상 부상·질병 치료비 지원',what:'업무상 사유로 부상 또는 질병이 발생한 경우 산재보험 요양급여 대상 여부를 검토하는 절차입니다.',who:'재해 근로자 또는 대리인이 신청할 수 있습니다.',cases:['근무 중 다친 경우','업무와 관련된 질병이 의심되는 경우','치료비 산재 처리를 원하는 경우'],pre:['재해 발생 일시와 장소를 설명할 수 있다','초진 의료기관 자료가 있다','업무 관련성을 설명할 수 있다'],docs:['요양급여 신청서','초진소견서 또는 진단서','재해경위서'],help:['목격자 진술','사고 현장 사진','119 또는 응급실 기록'],procedures:['신청서 접수','재해경위 및 의학자료 확인','사업장 조사','업무상 재해 여부 결정'],online:'산재보험 관련 신청은 토탈서비스 또는 관할 지사 안내를 확인하세요.',caution:'재해경위가 불명확하거나 의학자료가 부족하면 처리가 지연될 수 있습니다.',onlineUrlLabel:'산재 신청 안내'},
+      {id:'temporary-disability',category:'재활보상',target:'근로자',title:'휴업급여 청구',tag:'요양 중 취업하지 못한 기간의 급여',what:'산재 요양으로 일하지 못한 기간에 대해 생활 안정을 지원하는 급여입니다.',who:'산재 승인 후 요양 중인 근로자가 청구할 수 있습니다.',cases:['치료로 출근하지 못한 기간이 있는 경우','요양 승인 후 휴업기간 보상이 필요한 경우'],pre:['요양 승인 여부를 확인했다','휴업기간을 정리했다','임금 관련 자료를 준비했다'],docs:['휴업급여 청구서','휴업기간 확인자료','임금 관련 자료'],help:['사업장 휴업 확인 자료'],procedures:['청구서 접수','요양기간 및 휴업기간 확인','평균임금 검토','지급 여부 안내'],online:'토탈서비스에서 휴업급여 청구 가능 여부를 확인하세요.',caution:'실제 취업 여부와 휴업기간 확인이 중요합니다.',onlineUrlLabel:'토탈서비스'},
+      {id:'business-establish',category:'가입지원',target:'사업주',title:'사업장 성립신고',tag:'신규 사업장 보험관계 성립',what:'고용·산재보험 적용 사업장으로 보험관계를 성립하기 위한 신고입니다.',who:'사업주 또는 대리인이 신고합니다.',cases:['직원을 처음 채용한 경우','사업장을 새로 운영하는 경우'],pre:['사업자등록 정보가 있다','근로자 채용일을 알고 있다','사업장 소재지를 확인했다'],docs:['사업자등록증','근로자 명부','임금대장 또는 근로계약서'],help:['사업장 임대차계약서','대표자 신분 확인 자료'],procedures:['성립신고 접수','사업장 정보 확인','근로자 정보 확인','보험관계 성립 처리'],online:'토탈서비스에서 사업장 성립신고를 진행할 수 있습니다.',caution:'채용일과 사업개시일이 다르면 추가 확인이 필요할 수 있습니다.',onlineUrlLabel:'토탈서비스 성립신고'},
+      {id:'worker-acquire',category:'가입지원',target:'사업주',title:'근로자 취득·상실 신고',tag:'입사·퇴사 근로자 신고',what:'근로자의 입사와 퇴사에 따른 고용·산재보험 자격 변동을 신고하는 업무입니다.',who:'사업주가 신고합니다.',cases:['신규 입사자가 있는 경우','퇴사자가 있는 경우','신고일자가 잘못된 경우'],pre:['입퇴사일을 확인했다','근로시간과 임금을 알고 있다','근로자 인적사항을 확인했다'],docs:['근로자 명부','근로계약서','임금자료'],help:['출근부','퇴사확인 자료'],procedures:['신고서 접수','근로자 정보 확인','자격 변동 처리','결과 확인'],online:'토탈서비스에서 전자신고가 가능합니다.',caution:'취득일·상실일 오류는 추후 급여 심사에 영향을 줄 수 있습니다.',onlineUrlLabel:'토탈서비스 전자신고'},
+      {id:'welfare-loan',category:'복지·지원 사업',target:'근로자',title:'근로자 생활안정자금',tag:'의료비·혼례비 등 복지 지원',what:'근로자의 생활 안정을 위한 융자·지원 제도 안내입니다.',who:'요건을 충족하는 근로자가 신청할 수 있습니다.',cases:['의료비 부담이 큰 경우','혼례비 또는 장례비 지원이 필요한 경우'],pre:['신청 자격을 확인했다','소득 요건을 확인했다','용도별 증빙자료가 있다'],docs:['신청서','소득 확인자료','용도별 증빙자료'],help:['가족관계 관련 자료'],procedures:['신청 접수','자격 및 소득 확인','증빙자료 심사','결과 안내'],online:'근로복지넷에서 복지사업 신청 가능 여부를 확인하세요.',caution:'사업별 예산과 요건에 따라 지원 가능 여부가 달라질 수 있습니다.',onlineUrlLabel:'근로복지넷'},
+      {id:'insurance-fee',category:'자주 찾는 민원',target:'사업주',title:'보험료 문의',tag:'부과·납부·정산 확인',what:'고용·산재보험료 부과, 납부, 정산, 환급 관련 확인 업무입니다.',who:'사업주 또는 대리인이 문의할 수 있습니다.',cases:['보험료 부과내역을 확인하려는 경우','납부확인 또는 환급을 문의하는 경우'],pre:['사업장 관리번호를 알고 있다','문의 대상 기간을 정리했다','부과·납부 내역을 확인했다'],docs:['사업장 관리번호','납부내역','부과 관련 통지자료'],help:['회계자료','보수총액 신고자료'],procedures:['문의 접수','사업장 정보 확인','부과·납부내역 검토','결과 안내'],online:'토탈서비스에서 납부내역과 부과내역을 확인할 수 있습니다.',caution:'연도와 사업장 관리번호를 정확히 확인해야 합니다.',onlineUrlLabel:'토탈서비스 보험료'}
+    ];
+    const categories=[['자주 찾는 민원','Most Requested Services'],['재활보상','Rehabilitation & Compensation'],['복지·지원 사업','Welfare Support'],['가입지원','Enrollment Support'],['민원 처리 안내','Service Process'],['안내 메모','Quick Notes']];
+    const glossary=[['피보험자격','상용·일용 근로 자격 상태','고용·산재보험에 정식 가입되어 행정적 혜택을 수령할 자격입니다.'],['보수총액','세전 소득 실제 결산액','전년도 1년간 재직·중도퇴사 사원에게 귀속된 비과세 제외 세전 임금입니다.'],['요양급여','산재 치료비 지원','업무상 사유로 부상 또는 질병이 발생한 경우 규정된 산재보험 범위 내 치료비를 지원하는 제도입니다.'],['휴업급여','치료 기간 중 급여','업무상 부상 또는 질병으로 취업하지 못한 기간의 생계 안정을 지원하는 급여입니다.'],['장해급여','치료 종료 후 보상','치료가 종결되었으나 장해가 남은 경우 법정 등급에 따라 지급되는 보상 제도입니다.'],['이직확인서','퇴사 근로일수 확인','퇴사 사실과 이직 사유, 근로일수와 평균임금 확인에 활용되는 문서입니다.'],['소급가입','가입 누락 기간 소급','과거 가입 누락 기간에 대해 근무 사실과 임금 자료 등을 확인하여 소급 적용을 검토하는 절차입니다.'],['개산·확정보험료','보험료 선납·정산','예상 보수총액 기준 선납 후 실제 보수총액 기준으로 정산하는 보험료 구조입니다.']];
+    const $=s=>document.querySelector(s); const toast=$('#toast');
+    let checklist=JSON.parse(localStorage.getItem('qr-guide-checklist')||'{}'); let pre=JSON.parse(localStorage.getItem('qr-guide-pre-checklist')||'{}');
+    function save(){localStorage.setItem('qr-guide-checklist',JSON.stringify(checklist));localStorage.setItem('qr-guide-pre-checklist',JSON.stringify(pre));}
+    function notify(msg){toast.textContent=msg;toast.className='toast show';setTimeout(()=>toast.className='toast',2600)}
+    function count(obj,id,total){const c=Object.values(obj[id]||{}).filter(Boolean).length;return {c,total,p:total?Math.round(c/total*100):0}}
+    function renderCategories(){const root=$('#categoryGrid');root.innerHTML='';categories.forEach((cat,i)=>{const box=document.createElement('div');box.innerHTML=`<div class="board-title"><span class="num">${i+1}</span><h2>${cat[0]}</h2><em>${cat[1]}</em></div>`; if(cat[0]==='민원 처리 안내'){box.innerHTML+=`<div class="process"><div class="step"><span>1</span><div><b>서비스 접속</b><p>사전 준비를 위한 자가 진단 서비스 접속</p></div></div><div class="step"><span>2</span><div><b>민원 선택</b><p>원하는 업무를 선택하여 확인</p></div></div><div class="step"><span>3</span><div><b>준비서류 확인</b><p>필요 서류와 처리 대상을 사전 점검</p></div></div><div class="step"><span>4</span><div><b>창구 상담</b><p>준비 후 방문하여 신속하게 상담</p></div></div></div>`} else if(cat[0]==='안내 메모'){box.className='notes';box.innerHTML+=`<ul><li>세부 준비서류는 업무별로 달라질 수 있습니다.</li><li>온라인 신고 가능 업무는 토탈서비스를 이용하세요.</li><li>방문 전 최신 안내를 반드시 확인하세요.</li></ul>`} else {box.innerHTML+=`<div class="list">${cards.filter(c=>c.category===cat[0]).slice(0,4).map((c,idx)=>{const st=count(checklist,c.id,c.docs.length);return `<button class="item" onclick="openDetail('${c.id}')"><span class="idx">${idx+1}</span><div><b>${c.title}</b><p>${c.tag}</p></div><span class="target">[${c.target}]</span>${st.c?`<span class="progress-badge">✓ ${st.c}/${st.total}</span>`:''}</button>`}).join('')}</div>`} root.appendChild(box)})}
+    function renderGlossary(){ $('#glossary').innerHTML=glossary.map((g,i)=>`<div class="gloss"><button onclick="this.parentElement.classList.toggle('open')"><span><b>${g[0]}</b> <i>(${g[1]})</i></span><span>열기 ▼</span></button><div class="def">${g[2]}</div></div>`).join('') }
+    function openDetail(id){const c=cards.find(x=>x.id===id); if(!c)return; $('#listView').style.display='none'; $('#detailView').style.display='block'; const a=count(pre,c.id,c.pre.length), b=count(checklist,c.id,c.docs.length); $('#detailRoot').innerHTML=`<section class="panel detail-card"><span class="tag">영역: ${c.category}</span><span class="tag">업무대상: ${c.target}</span><h2>${c.title}</h2><p style="color:var(--muted);font-weight:750">${c.tag}</p><div class="box">✨ 체크리스트 항목을 터치하여 방문 전 준비 이력을 기록할 수 있습니다. 기록은 현재 브라우저에 임시 저장됩니다.</div></section>${block('이 민원은 무엇인가요?',c.what)}${block('누가 신청하나요?',c.who)}${listBlock('청구 대표사례',c.cases,'사례')}<section class="panel section"><h3>준비 및 자격 자가체크 · 진행 ${a.c}/${a.total}</h3><div class="box checks">${c.pre.map((x,i)=>checkButton(c.id,i,x,'pre')).join('')}<div class="bar"><div style="width:${a.p}%"></div></div></div></section><section class="panel section"><h3 style="color:#c45e5e">필수 지참 서류 ★ · 진행 ${b.c}/${b.total}</h3><div class="box checks">${c.docs.map((x,i)=>checkButton(c.id,i,'★ '+x,'doc')).join('')}<div class="bar"><div style="width:${b.p}%;background:var(--green)"></div></div></div></section>${c.help.length?listBlock('가져오면 빠른 대안 서류',c.help,'🔹'):''}<section class="panel section"><h3>민원 심사 및 처리절차</h3><div class="box timeline">${c.procedures.map((x,i)=>`<div class="tl"><span>${i<2?'✓':i+1}</span><div><b>${i+1}단계</b><p>${x}</p></div></div>`).join('')}</div></section>${block('비대면 온라인 신청 안내',c.online)}${block('반려 방지 및 사전 주의 조항',c.caution)}<section class="panel"><div class="cta"><a class="btn" href="${onlineLink(c)}" target="_blank">${c.onlineUrlLabel} 바로가기</a><a class="btn ghost" href="tel:1588-0075">1588-0075</a><a class="btn ghost" href="${FORM_URL}" target="_blank">공식 서식 다운</a><button class="btn ghost" onclick="resetCard('${c.id}')">체크 기록 초기화</button></div></section>`; scrollTo(0,0)}
+    function block(t,txt){return `<section class="panel section"><h3>${t}</h3><div class="box">${txt}</div></section>`} function listBlock(t,arr,p){return `<section class="panel section"><h3>${t}</h3><div class="box"><ul>${arr.map((x,i)=>`<li><b>${p==='사례'?p+' '+(i+1):p}</b> ${x}</li>`).join('')}</ul></div></section>`}
+    function checkButton(id,i,txt,type){const obj=type==='pre'?pre:checklist;return `<button class="check ${obj[id]?.[i]?'done':''}" onclick="toggleCheck('${id}',${i},'${type}')"><span>${txt}</span><span class="dot">${obj[id]?.[i]?'✓':''}</span></button>`}
+    function toggleCheck(id,i,type){const obj=type==='pre'?pre:checklist;obj[id]=obj[id]||{};obj[id][i]=!obj[id][i];save();openDetail(id)}
+    function resetCard(id){delete checklist[id];delete pre[id];save();notify('해당 민원의 준비 서류 및 자가 자격 체크 이력을 초기화했습니다.');openDetail(id)}
+    function backToList(){ $('#detailView').style.display='none'; $('#listView').style.display='block'; renderCategories(); scrollTo(0,0)}
+    function onlineLink(c){if(c.category==='복지·지원 사업')return 'https://welfare.comwel.or.kr/'; if(c.onlineUrlLabel.includes('정부24'))return 'https://www.gov.kr/'; return TOTAL_SERVICE_URL}
+    renderCategories(); renderGlossary();
+  </script>
 </body>
 </html>
