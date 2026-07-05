@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMWEL QR 관리자 통계</title>
+  <style>
+    :root{--blue:#0057B8;--bg:#f5f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--red:#b42318;--green:#0f9f7a}
+    *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+    .wrap{max-width:1180px;margin:0 auto;padding:22px 18px}header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}.nav{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:900;color:var(--blue)}
+    h1{font-size:34px;letter-spacing:-.05em;margin:22px 0 6px}.muted{color:var(--muted)}.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px;margin-top:16px}
+    input,select,button{font:inherit;border-radius:13px;border:1px solid #d1d5db;padding:11px 12px}button{border:0;background:var(--blue);color:#fff;font-weight:800;cursor:pointer}.btn2{background:#fff;color:var(--blue);border:1px solid #c9d8ee}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px}.stat span{color:var(--muted);font-size:13px}.stat b{display:block;font-size:30px;margin-top:6px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.bar{margin:10px 0}.bar-head{display:flex;justify-content:space-between;font-size:13px;color:#374151}.track{height:12px;background:#eef2f7;border-radius:999px;overflow:hidden}.fill{height:100%;background:var(--blue);border-radius:999px}
+    table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{color:#374151;background:#f9fafb}.low{background:#fff1f0}
+    .hidden{display:none}.summary{white-space:pre-wrap;background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:14px;color:#374151}.nav a{color:#374151;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#fff}
+    @media(max-width:860px){.stats,.grid{grid-template-columns:1fr}.nav{align-items:flex-start;flex-direction:column}table{font-size:12px}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap nav"><div class="brand">COMWEL QR 관리자 통계 PoC</div><div class="row"><a href="index.html">방문 전 안내</a><a href="feedback.html?qr=admin-test">설문 테스트</a></div></div></header>
+
+  <main class="wrap">
+    <h1>관리자 통계</h1>
+    <p class="muted">최근 500건 기준으로 방문 목적, 만족도, 불편사항, QR별 이용 현황을 확인합니다.</p>
+
+    <section id="loginCard" class="card">
+      <h2>관리자 인증</h2>
+      <div class="row">
+        <input id="adminToken" type="password" placeholder="ADMIN_TOKEN 입력" />
+        <button onclick="loadData()">조회하기</button>
+      </div>
+      <p id="loginMsg" class="muted"></p>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <div class="card row">
+        <select id="filter" onchange="render()">
+          <option value="all">전체</option>
+          <option value="today">오늘</option>
+          <option value="inconvenience">불편사항 있음</option>
+          <option value="low">만족도 낮음(1~2점)</option>
+        </select>
+        <button class="btn2" onclick="copySummary()">보고용 요약 복사</button>
+        <button class="btn2" onclick="downloadCSV()">CSV 다운로드</button>
+        <button onclick="loadData()">새로고침</button>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="grid">
+        <div class="card"><h2>방문 목적 통계</h2><div id="purposeChart"></div></div>
+        <div class="card"><h2>만족도 분포</h2><div id="satisfactionChart"></div></div>
+        <div class="card"><h2>QR별 이용 통계</h2><div id="qrChart"></div></div>
+        <div class="card"><h2>보고용 자동 요약</h2><div id="summary" class="summary"></div></div>
+      </div>
+
+      <div class="card">
+        <h2>최근 응답 목록</h2>
+        <div style="overflow:auto">
+          <table>
+            <thead><tr><th>제출일시</th><th>QR</th><th>방문 목적</th><th>만족도</th><th>불편사항</th><th>의견</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let raw = [];
+    let current = [];
+
+    async function loadData(){
+      const token = document.getElementById('adminToken').value.trim();
+      if(!token){ document.getElementById('loginMsg').textContent = '관리자 토큰을 입력해 주세요.'; return; }
+      document.getElementById('loginMsg').textContent = '조회 중...';
+      try{
+        const res = await fetch('/api/admin-feedback', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({adminToken: token})
+        });
+        const data = await res.json();
+        if(!res.ok || !data.ok) throw new Error(data.message || '조회 실패');
+        raw = data.items || [];
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('loginMsg').textContent = `조회 완료: ${raw.length}건`;
+        render();
+      }catch(err){
+        document.getElementById('loginMsg').textContent = err.message || '오류가 발생했습니다.';
+      }
+    }
+
+    function isToday(dateStr){
+      const d = new Date(dateStr); const now = new Date();
+      return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth() && d.getDate()===now.getDate();
+    }
+
+    function applyFilter(){
+      const f = document.getElementById('filter').value;
+      current = raw.filter(x => {
+        if(f==='today') return isToday(x.created_at);
+        if(f==='inconvenience') return x.inconvenience && x.inconvenience !== '없음';
+        if(f==='low') return Number(x.satisfaction) <= 2;
+        return true;
+      });
+    }
+
+    function countBy(key){
+      return current.reduce((acc,x)=>{ const k = x[key] || '미분류'; acc[k]=(acc[k]||0)+1; return acc; },{});
+    }
+
+    function chart(elId, obj){
+      const el = document.getElementById(elId); const entries = Object.entries(obj).sort((a,b)=>b[1]-a[1]);
+      const max = Math.max(1, ...entries.map(e=>e[1]));
+      el.innerHTML = entries.length ? entries.map(([k,v]) => `
+        <div class="bar"><div class="bar-head"><span>${escapeHtml(k)}</span><b>${v}건</b></div><div class="track"><div class="fill" style="width:${Math.round(v/max*100)}%"></div></div></div>
+      `).join('') : '<p class="muted">데이터가 없습니다.</p>';
+    }
+
+    function render(){
+      applyFilter();
+      const total = current.length;
+      const today = current.filter(x=>isToday(x.created_at)).length;
+      const avg = total ? (current.reduce((s,x)=>s+Number(x.satisfaction||0),0)/total).toFixed(1) : '-';
+      const inconveniences = current.filter(x=>x.inconvenience && x.inconvenience !== '없음').length;
+      document.getElementById('stats').innerHTML = `
+        <div class="stat"><span>전체 응답</span><b>${total}</b></div>
+        <div class="stat"><span>오늘 응답</span><b>${today}</b></div>
+        <div class="stat"><span>평균 만족도</span><b>${avg}</b></div>
+        <div class="stat"><span>불편사항 있음</span><b>${inconveniences}</b></div>
+      `;
+
+      chart('purposeChart', countBy('visit_purpose'));
+      chart('satisfactionChart', countBy('satisfaction'));
+      chart('qrChart', countBy('qr_source'));
+
+      document.getElementById('rows').innerHTML = current.map(x => `
+        <tr class="${Number(x.satisfaction)<=2?'low':''}">
+          <td>${formatDate(x.created_at)}</td><td>${escapeHtml(x.qr_source||'')}</td><td>${escapeHtml(x.visit_purpose||'')}</td><td>${escapeHtml(String(x.satisfaction||''))}</td><td>${escapeHtml(x.inconvenience||'')}</td><td>${escapeHtml(x.opinion||'')}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('summary').textContent = makeSummary();
+    }
+
+    function makeSummary(){
+      const total = current.length;
+      const avg = total ? (current.reduce((s,x)=>s+Number(x.satisfaction||0),0)/total).toFixed(1) : '-';
+      const purpose = Object.entries(countBy('visit_purpose')).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v])=>`${k} ${v}건`).join(', ') || '데이터 없음';
+      const bad = current.filter(x=>x.inconvenience && x.inconvenience !== '없음').length;
+      return `현재 조회 기준 총 ${total}건의 QR 만족도 응답이 접수되었습니다.\n평균 만족도는 ${avg}점입니다.\n주요 방문 목적은 ${purpose} 순으로 나타났습니다.\n불편사항은 총 ${bad}건 접수되었습니다.\n본 요약은 서비스 개선 참고용이며, 공식 민원 판단이나 처분을 대체하지 않습니다.`;
+    }
+
+    async function copySummary(){
+      await navigator.clipboard.writeText(document.getElementById('summary').textContent);
+      alert('보고용 요약을 복사했습니다.');
+    }
+
+    function downloadCSV(){
+      const header = ['created_at','qr_source','visit_purpose','satisfaction','inconvenience','opinion'];
+      const lines = [header.join(',')].concat(current.map(x => header.map(h => `"${String(x[h]??'').replaceAll('"','""')}"`).join(',')));
+      const blob = new Blob(["\ufeff"+lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `qr_feedback_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function escapeHtml(v){ return String(v).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function formatDate(v){ if(!v) return ''; const d = new Date(v); return d.toLocaleString('ko-KR'); }
+  </script>
+</body>
+</html>
