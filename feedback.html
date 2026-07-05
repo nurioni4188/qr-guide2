@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMWEL QR 방문 후 만족도 조사</title>
+  <style>
+    :root{--blue:#0057B8;--green:#0f9f7a;--bg:#f5f7fb;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--red:#b42318}
+    *{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+    .wrap{max-width:820px;margin:0 auto;padding:24px 18px}.top{padding:30px 0 12px}.badge{display:inline-block;background:#e7fbf5;color:#08745a;border-radius:999px;padding:7px 12px;font-weight:800;font-size:13px}
+    h1{font-size:clamp(32px,6vw,52px);line-height:1.08;letter-spacing:-.06em;margin:18px 0 10px}.lead{color:#4b5563;font-size:17px;margin:0}
+    .card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:24px;margin-top:18px}.field{margin:18px 0}.field label{display:block;font-weight:800;margin-bottom:8px}
+    select,textarea,input{width:100%;border:1px solid #d1d5db;border-radius:14px;padding:13px 14px;font:inherit;background:#fff}textarea{min-height:110px;resize:vertical}
+    .radio-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.radio{border:1px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center;cursor:pointer;background:#fff}.radio input{width:auto}.radio strong{display:block;font-size:20px;color:var(--green)}
+    .notice{background:#fff7db;border:1px solid #fde68a;color:#5f4700;border-radius:16px;padding:14px 16px;font-weight:650}
+    .btn{width:100%;border:0;border-radius:16px;background:var(--green);color:#fff;font-weight:900;padding:15px 18px;font-size:17px;cursor:pointer}.btn:disabled{opacity:.55;cursor:not-allowed}
+    .msg{margin-top:14px;border-radius:16px;padding:14px 16px;display:none}.msg.ok{display:block;background:#e7fbf5;color:#08745a}.msg.err{display:block;background:#fff1f0;color:var(--red)}
+    .small{color:#6b7280;font-size:13px}.nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.nav a{border:1px solid var(--line);border-radius:999px;padding:8px 12px;text-decoration:none;color:#374151;background:#fff}
+    @media(max-width:640px){.radio-grid{grid-template-columns:1fr}.card{padding:18px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <span class="badge">방문 후 만족도 조사 · 30초</span>
+      <h1>오늘 방문은<br/>어떠셨나요?</h1>
+      <p class="lead">방문 목적, 만족도, 불편사항을 간단히 남겨주시면 더 나은 방문 서비스를 만드는 참고자료로 활용하겠습니다.</p>
+      <div class="nav"><a href="index.html">방문 전 안내</a><a href="admin.html">관리자 통계</a></div>
+    </div>
+
+    <form id="feedbackForm" class="card">
+      <div class="notice">개인정보는 입력하지 마세요. 이름, 전화번호, 주민등록번호, 주소, 계좌번호, 이메일 등은 저장하지 않습니다.</div>
+
+      <div class="field">
+        <label for="visitPurpose">방문 목적</label>
+        <select id="visitPurpose" required>
+          <option value="">선택해 주세요</option>
+          <option>산재보상 상담</option>
+          <option>고용·산재보험 가입</option>
+          <option>보험료 문의</option>
+          <option>증명서 발급</option>
+          <option>서류 제출</option>
+          <option>기타</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>만족도</label>
+        <div class="radio-grid">
+          <label class="radio"><input type="radio" name="satisfaction" value="1" required><strong>1</strong><span>매우 불만</span></label>
+          <label class="radio"><input type="radio" name="satisfaction" value="2"><strong>2</strong><span>불만</span></label>
+          <label class="radio"><input type="radio" name="satisfaction" value="3"><strong>3</strong><span>보통</span></label>
+          <label class="radio"><input type="radio" name="satisfaction" value="4"><strong>4</strong><span>만족</span></label>
+          <label class="radio"><input type="radio" name="satisfaction" value="5"><strong>5</strong><span>매우 만족</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="inconvenience">불편사항</label>
+        <select id="inconvenience">
+          <option>없음</option>
+          <option>대기시간</option>
+          <option>안내 어려움</option>
+          <option>서류 준비 어려움</option>
+          <option>온라인 이용 어려움</option>
+          <option>기타</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="opinion">추가 의견 <span class="small">(선택, 개인정보 제외)</span></label>
+        <textarea id="opinion" maxlength="500" placeholder="개선 의견만 입력해 주세요. 개인정보는 입력하지 마세요."></textarea>
+      </div>
+
+      <p class="small" id="qrText"></p>
+      <button id="submitBtn" class="btn" type="submit">만족도 제출하기</button>
+      <div id="message" class="msg"></div>
+    </form>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const qrSource = params.get('qr') || 'unknown';
+    document.getElementById('qrText').textContent = `QR 구분값: ${qrSource}`;
+
+    const message = document.getElementById('message');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function show(type, text){
+      message.className = 'msg ' + type;
+      message.textContent = text;
+    }
+
+    document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      message.className = 'msg';
+      submitBtn.disabled = true;
+      submitBtn.textContent = '제출 중...';
+
+      const satisfaction = document.querySelector('input[name="satisfaction"]:checked')?.value;
+      const payload = {
+        visit_purpose: document.getElementById('visitPurpose').value,
+        satisfaction: Number(satisfaction),
+        inconvenience: document.getElementById('inconvenience').value,
+        opinion: document.getElementById('opinion').value.trim(),
+        page_path: location.pathname + location.search,
+        qr_source: qrSource
+      };
+
+      try {
+        const res = await fetch('/api/submit-feedback', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if(!res.ok || !data.ok) throw new Error(data.message || '제출에 실패했습니다.');
+        show('ok', '제출되었습니다. 소중한 의견 감사합니다.');
+        e.target.reset();
+      } catch(err) {
+        show('err', err.message || '오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '만족도 제출하기';
+      }
+    });
+  </script>
+</body>
+</html>
