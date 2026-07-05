@@ -14,6 +14,7 @@
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.bar{margin:10px 0}.bar-head{display:flex;justify-content:space-between;font-size:13px;color:#374151}.track{height:12px;background:#eef2f7;border-radius:999px;overflow:hidden}.fill{height:100%;background:var(--blue);border-radius:999px}
     table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{color:#374151;background:#f9fafb}.low{background:#fff1f0}
     .hidden{display:none}.summary{white-space:pre-wrap;background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:14px;color:#374151}.nav a{color:#374151;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#fff}
+    .csv-help{font-size:13px;color:var(--muted);width:100%;margin-top:4px}.btn-preview{background:#0f9f7a;color:#fff;border:1px solid #0f9f7a}
     @media(max-width:860px){.stats,.grid{grid-template-columns:1fr}.nav{align-items:flex-start;flex-direction:column}table{font-size:12px}}
   </style>
 </head>
@@ -43,7 +44,9 @@
         </select>
         <button class="btn2" onclick="copySummary()">보고용 요약 복사</button>
         <button class="btn2" onclick="downloadCSV()">CSV 다운로드</button>
+        <button class="btn-preview" onclick="previewCSV()">CSV 미리보기</button>
         <button onclick="loadData()">새로고침</button>
+        <div class="csv-help">CSV는 현재 필터된 데이터 기준으로 생성됩니다. 다운로드가 보이지 않으면 CSV 미리보기를 눌러 복사해 주세요.</div>
       </div>
 
       <div class="stats" id="stats"></div>
@@ -68,6 +71,8 @@
   </main>
 
   <script>
+    const STORAGE_KEY = 'comwel_feedback_logs';
+    const CSV_COLUMNS = ['created_at','type','visit_purpose','satisfaction','issue','qr_type','path','memo'];
     let raw = [];
     let current = [];
 
@@ -84,6 +89,7 @@
         const data = await res.json();
         if(!res.ok || !data.ok) throw new Error(data.message || '조회 실패');
         raw = data.items || [];
+        try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(raw)); }catch(e){ console.warn('localStorage 저장 실패', e); }
         document.getElementById('dashboard').classList.remove('hidden');
         document.getElementById('loginMsg').textContent = `조회 완료: ${raw.length}건`;
         render();
@@ -100,8 +106,9 @@
     function applyFilter(){
       const f = document.getElementById('filter').value;
       current = raw.filter(x => {
+        const issue = x.issue ?? x.inconvenience;
         if(f==='today') return isToday(x.created_at);
-        if(f==='inconvenience') return x.inconvenience && x.inconvenience !== '없음';
+        if(f==='inconvenience') return issue && issue !== '없음';
         if(f==='low') return Number(x.satisfaction) <= 2;
         return true;
       });
@@ -158,12 +165,89 @@
       alert('보고용 요약을 복사했습니다.');
     }
 
+    function readStoredLogs(){
+      try{
+        const saved = localStorage.getItem(STORAGE_KEY);
+        const parsed = saved ? JSON.parse(saved) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      }catch(e){
+        console.warn('localStorage 읽기 실패', e);
+        return [];
+      }
+    }
+
+    function getCsvRows(){
+      if(current && current.length) return current;
+      if(raw && raw.length) return raw.slice(0, 500);
+      return readStoredLogs().slice(0, 500);
+    }
+
+    function normalizeCsvRow(x){
+      return {
+        created_at: x.created_at,
+        type: x.type || 'feedback',
+        visit_purpose: x.visit_purpose,
+        satisfaction: x.satisfaction,
+        issue: x.issue ?? x.inconvenience,
+        qr_type: x.qr_type ?? x.qr_source,
+        path: x.path ?? x.page_path,
+        memo: x.memo ?? x.opinion
+      };
+    }
+
+    function csvValue(value){
+      const safe = value === null || value === undefined ? '' : String(value);
+      return '"' + safe.replaceAll('"','""') + '"';
+    }
+
+    function makeCSV(){
+      const rows = getCsvRows();
+      if(!rows.length) return '';
+      const lines = [CSV_COLUMNS.map(csvValue).join(',')];
+      rows.map(normalizeCsvRow).forEach(row => {
+        lines.push(CSV_COLUMNS.map(col => csvValue(row[col])).join(','));
+      });
+      return lines.join('\n');
+    }
+
+    function makeCsvFileName(){
+      return `comwel_qr_stats_${new Date().toISOString().slice(0,10)}.csv`;
+    }
+
     function downloadCSV(){
-      const header = ['created_at','qr_source','visit_purpose','satisfaction','inconvenience','opinion'];
-      const lines = [header.join(',')].concat(current.map(x => header.map(h => `"${String(x[h]??'').replaceAll('"','""')}"`).join(',')));
-      const blob = new Blob(["\ufeff"+lines.join('\n')], {type:'text/csv;charset=utf-8;'});
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `qr_feedback_${new Date().toISOString().slice(0,10)}.csv`; a.click();
-      URL.revokeObjectURL(a.href);
+      const csv = makeCSV();
+      if(!csv){
+        alert('다운로드할 응답 데이터가 없습니다.');
+        return;
+      }
+      const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = makeCsvFileName();
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      alert('CSV 다운로드를 요청했습니다. Chrome 다운로드 목록 또는 내 파일 > 다운로드 폴더를 확인해 주세요.');
+    }
+
+    function previewCSV(){
+      const csv = makeCSV();
+      if(!csv){
+        alert('다운로드할 응답 데이터가 없습니다.');
+        return;
+      }
+      const safeCsv = csv.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+      const win = window.open('', '_blank');
+      if(!win){
+        alert('새 창이 차단되었습니다. 브라우저 팝업 차단을 해제한 뒤 다시 시도해 주세요.');
+        return;
+      }
+      win.document.open();
+      win.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CSV 미리보기</title><style>body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;background:#f5f7fb;color:#111827}.wrap{max-width:1000px;margin:0 auto;padding:22px}h1{letter-spacing:-.04em}p{color:#6b7280;font-weight:700}textarea{width:100%;min-height:70vh;border:1px solid #d1d5db;border-radius:16px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;background:white}.btn{display:inline-block;border:0;border-radius:12px;background:#0057B8;color:white;font-weight:900;padding:10px 14px;margin-bottom:12px;cursor:pointer}</style></head><body><main class="wrap"><h1>CSV 미리보기</h1><p>아래 내용을 전체 선택하여 복사한 뒤 엑셀, 메모장, 구글시트 등에 붙여넣을 수 있습니다.</p><button class="btn" onclick="document.getElementById('csvText').select();document.execCommand('copy');alert('CSV 내용을 복사했습니다.');">전체 선택 후 복사</button><textarea id="csvText">${safeCsv}</textarea></main></body></html>`);
+      win.document.close();
     }
 
     function escapeHtml(v){ return String(v).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
